@@ -1,0 +1,25 @@
+# Copied from
+# https://docs.github.com/en/actions/using-workflows/caching-dependencies-to-speed-up-workflows#managing-cache
+
+name: Create cache when PR is opened
+on:
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Touch file
+        run: |
+          touch /tmp/foobar.txt
+      - name: Save file
+        uses: actions/cache/save@v3
+        env:
+          cache-name: pr-
+        with:
+          path: /tmp/*.txt 
+          key: ${{ env.cache-name }}
+          enableCrossOsArchive: true
+
